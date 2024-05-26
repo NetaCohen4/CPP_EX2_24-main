@@ -13,39 +13,33 @@
 
 namespace ariel {
 
-    // ################# Need changing ################
     std::ostream& operator<<(std::ostream& os, const Graph& graph) {
         os << "Printing Graph . . .\n";
         for (size_t i = 0; i < graph.n; i++) {
             for (size_t j = 0; j < graph.n; j++) {
-                os << graph.graph[i][j] << ' ';
+                if (graph.graph[i][j]) {
+                    os << i << "-->" << j << endl;
+                }
             }
-            os << endl;
         }
         return os;
     }
 
-    void Graph::operator=(const Graph other) {
+    void Graph::operator=(const Graph& other) {
         this->graph = other.graph;
         this->n = other.n;
     }
 
     Graph Graph::operator+(const Graph& other) const {
         if (this->n != other.n) {
-            std::cout << "Can not combine two graphs which has different amount of vertices.\n";
             throw std::invalid_argument("Attempt of combining two different sized graphs");
         }
         
         vector<vector<int>> combination = this->graph;
         for (size_t i = 0; i < this->n; i++) {
-            for (size_t j =0; j < this->n; j++) {
+            for (size_t j = 0; j < this->n; j++) {
                 if (other.graph[i][j]) {
-                    if (combination[i][j]) {
-                        combination[i][j] = min(combination[i][j], other.graph[i][j]);
-                    }
-                    else {
-                        combination[i][j] = other.graph[i][j];
-                    }
+                    combination[i][j] += other.graph[i][j];
                     
                 }
             }
@@ -56,45 +50,106 @@ namespace ariel {
         return result;
     }
 
-    void Graph::operator+=(const Graph other) const {
+    void Graph::operator+=(const Graph& other) {
         try
         {
-            *this = *this + other;
+            (*this) = (*this) + other;
         }
         catch (const std::invalid_argument &e)
         {
-            cout << e.what() << endl; // Should print "The number of columns in the first matrix must be equal to the number of rows in the second matrix."
+            cout << e.what() << endl;
         }
         
     }
 
     Graph Graph::operator-(const Graph& other) const {
         if (this->n != other.n) {
-            std::cout << "Can not combine two graphs which has different amount of vertices.\n";
-            throw std::invalid_argument("Attempt of combining two different sized graphs");
+            throw std::invalid_argument("Attempt of subtracting two different sized graphs");
         }
         
-        vector<vector<int>> combination = this->graph;
+        vector<vector<int>> subtraction = this->graph;
         for (size_t i = 0; i < this->n; i++) {
-            for (size_t j =0; j < this->n; j++) {
+            for (size_t j = 0; j < this->n; j++) {
                 if (other.graph[i][j]) {
-                    
-                    // Fill
+                    subtraction[i][j] = 0;
                 }
             }
         }
         Graph result;
-        result.loadGraph(combination);
+        result.loadGraph(subtraction);
+        result.n = this->n;
         return result;
     }
 
-    void Graph::operator-=(const Graph& other) const {
+    void Graph::operator-=(const Graph& other) {
         
-        // Fill
+        try
+        {
+            (*this) = (*this) - other;
+        }
+        catch (const std::invalid_argument &e)
+        {
+            cout << e.what() << endl;
+        }
+    }
+
+    bool Graph::operator==(const Graph& other) const {
+        if (this->graph == other.graph)
+            return true;
+        return false;
+    }
+
+    bool Graph::operator!=(const Graph& other) const {
+        return !(*this == other);
+    }
+
+    bool Graph::operator>(const Graph& other) const {
+
+        if (*this == other) {
+            return false;
+        }
+        //בדיקת הכלה
+        bool flag = true;
+        if (other.n > this->n) {
+            return false;
+        }
+        for (size_t i = 0; i < other.n; i++) {
+            for (size_t j = 0; j < other.n; j++) {
+                if (other.graph[i][j]) {
+                    if (this->graph[i][j] != other.graph[i][j])
+                        flag = false;
+                }
+                
+            }
+        }
+        if (flag) {
+            return true;
+        }
+        //בדיקת מספר צלעות
+        if (this->get_num_of_edges() > other.get_num_of_edges()) {
+            return true;
+        }
+        //בדיקת סדר גודל
+        if (this->n > other.n) {
+            return true;
+        }
+        return false;
+    }
+
+    bool Graph::operator>=(const Graph& other) const {
+        return !(*this < other);
+    }
+
+    bool Graph::operator<(const Graph& other) const {
+        return (other > *this);
+    }
+
+    bool Graph::operator<=(const Graph& other) const {
+        return !(*this > other);
     }
 
     // Pre-increment
-    Graph& Graph::operator++() { //###########################################################
+    Graph& Graph::operator++() {
         for (size_t i = 0; i < this->n; i++) {
             for (size_t j =0; j < this->n; j++) {
                 if (this->graph[i][j]) {
@@ -111,27 +166,14 @@ namespace ariel {
     }
 
     // Post-increment
-    Graph Graph::operator++(int) {  //########################################################3
-        // Create a copy of the current state
+    Graph Graph::operator++(int) { 
         Graph temp = *this;
-        
-        for (size_t i = 0; i < this->n; i++) {
-            for (size_t j =0; j < this->n; j++) {
-                if (this->graph[i][j]) {
-                    if (this->graph[i][j] == -1) {
-                        throw std::invalid_argument("can't add 1 to edge weighted -1");
-                    }
-                    else {
-                        this->graph[i][j]++;
-                    }
-                }
-            }
-        }
+        ++(*this);
         return temp;
     }
 
-    // Pre-reduction
-    Graph& Graph::operator--() { //###########################################################
+    // Pre-subtraction
+    Graph& Graph::operator--() { 
         for (size_t i = 0; i < this->n; i++) {
             for (size_t j =0; j < this->n; j++) {
                 if (this->graph[i][j]) {
@@ -147,23 +189,10 @@ namespace ariel {
         return *this;
     }
 
-    // Post-reduction
-    Graph Graph::operator--(int) {  //########################################################3
-        // Create a copy of the current state
+    // Post-subtraction
+    Graph Graph::operator--(int) {
         Graph temp = *this;
-        
-        for (size_t i = 0; i < this->n; i++) {
-            for (size_t j =0; j < this->n; j++) {
-                if (this->graph[i][j]) {
-                    if (this->graph[i][j] == 1) {
-                        throw std::invalid_argument("can't subtract 1 to edge weighted 1");
-                    }
-                    else {
-                        this->graph[i][j]--;
-                    }
-                }
-            }
-        }
+        --(*this);
         return temp;
     }
 
@@ -180,49 +209,48 @@ namespace ariel {
         return g;
     }
 
+    void Graph::operator*=(int scalar) {
+        try
+        {
+            (*this) = (*this) * scalar;
+        }
+        catch (const std::invalid_argument &e)
+        {
+            cout << e.what() << endl;
+        }
+    }
+
     Graph Graph::operator*(const Graph& other) const {
         if (this->n != other.n) {
-            std::cout << "Can not multiple two graphs which has different amount of vertices.\n";
             throw std::invalid_argument("Attempt of multiple two different sized graphs");
         }
-        
-        vector<vector<int>> multiple = this->graph;
-        //multiple two matrices by some function
         Graph result;
-        result.loadGraph(multiple);
-        return result;
-    }
-/*
-    // Function to load graph data from file
-    void Graph::loadGraph(std::vector<std::vector<int>> matrix) {
-        size_t numRows = matrix.size();
-        if (numRows == 0) // If the matrix has no rows, it's not a square matrix
-            throw std::invalid_argument("Invalid graph: Empty matrix"); // Throw an exception if the matrix is empty
-        size_t numCols = matrix[0].size(); // Assuming all rows have same number of columns
-        if (numRows != numCols)
-            throw std::invalid_argument("Invalid graph: The graph is not a square matrix.");
-        for (size_t i = 0; i < numRows; i++) {
-            if (graph[i][i]) {
-                throw std::invalid_argument("Invalid graph: A vertex can't have an edge to itself.");
-            }
-        }
-        graph = matrix;
-        n = graph.size();
-            
-    } 
-
-    void Graph::printGraph(){
-        int e_count = 0;
-        for (const auto& row : graph) {
-            for (int value : row) {
-                if (value != 0) {
-                    e_count++;
+        vector<vector<int>> multiple(this->n, vector<int>(this->n, 0));
+        // Perform matrix multiplication
+        for (size_t i = 0; i < this->n; ++i) {
+            for (size_t j = 0; j < this->n; ++j) {
+                for (size_t k = 0; k < this->n; ++k) {
+                    multiple[i][j] += this->graph[i][k] * other.graph[k][j];
                 }
             }
         }
-        std::cout << "Graph with " <<  graph.size() << " vertices and " << e_count << " edges.\n";
-    } 
-    */  
+        result.loadGraph(multiple);
+        return result;
+    }
+
+    Graph Graph::operator+() {
+        return *this;
+    }
+
+    Graph Graph::operator-() {
+        for (size_t i = 0; i < this->n; i++) {
+            for (size_t j = 0; j < this->n; j++) {
+                this->graph[i][j] *= -1;
+            }
+        }
+        return *this;
+    }
+
 
     bool Graph::is_BFS_cover_all(size_t start) {
 

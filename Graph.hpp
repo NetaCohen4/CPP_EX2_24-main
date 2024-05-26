@@ -28,6 +28,8 @@ namespace ariel {
         // Constructor
         Graph(){}
 
+        Graph(vector<vector<int>> g){this->loadGraph(g);}
+
         // Destructor
         ~Graph(){}
 
@@ -37,6 +39,7 @@ namespace ariel {
 
         // Function to load graph data from file
         void loadGraph(std::vector<std::vector<int>> matrix) {
+
             size_t numRows = matrix.size();
             if (numRows == 0) // If the matrix has no rows, it's not a square matrix
                 throw std::invalid_argument("Invalid graph: Empty matrix"); // Throw an exception if the matrix is empty
@@ -53,7 +56,7 @@ namespace ariel {
             
         }
 
-        // Function to print the graph
+        // Function to print graph details
         void printGraph(){
             int e_count = 0;
             for (const auto& row : graph) {
@@ -66,60 +69,73 @@ namespace ariel {
             std::cout << "Graph with " <<  graph.size() << " vertices and " << e_count << " edges.\n";
         }
 
-        // Operator functions:
-        // Overload the output operator to print the matrix of the graph
-        friend ostream& operator<<(ostream& os, const Graph& graph);
+        vector<vector<int>> getGraph(){
+            return graph;
+        }
 
-        void operator=(const Graph other);
-
-        // Overload the addition operator to add two graphs together
-        Graph operator+(const Graph& other) const;
-
-        void operator+=(const Graph other) const;
-
-        Graph operator-(const Graph& other) const;
-
-        void operator-=(const Graph& other) const;
-
-        // Pre-increment
-        Graph& operator++();
-        
-        // Post-increment
-        Graph operator++(int);
-
-        // Pre-reduction
-        Graph& operator--();
-        
-        // Post-reduction
-        Graph operator--(int);
-
-        Graph operator*(int);
-
-        Graph operator*(const Graph& other) const;
-/*
-        // Overload the multiplication operator to multiply two graphs together
-        friend Graph operator*(const Graph& lhs, const Graph& rhs);
-
-        // Overload the multiplication operator to scale a graph by a scalar
-        friend Graph operator*(const Graph& graph, int scalar);
-
-        // Overload the multiplication operator to scale a graph by a scalar (reverse order)
-        friend Graph operator*(int scalar, const Graph& graph);
-
-        // Overload the division operator to scale a graph by a scalar
-        friend Graph operator/(const Graph& graph, int scalar);
-
-        // *= operator overload
-        Graph& operator*=(int scalar) {
-            for (auto& row : graph) {
-                for (int& value : row) {
-                    value *= scalar;
+        int get_num_of_edges() const {
+            int counter = 0;
+            for (size_t i = 0; i < n; i++) {
+                for (size_t j = 0; j < n; j++) {
+                    if (graph[i][j]) {
+                        counter++;
+                    }
                 }
             }
-            return *this;
+            return counter;
         }
-        */
 
+        // Operator functions:
+        
+        friend ostream& operator<<(ostream& os, const Graph& graph);
+
+        void operator=(const Graph& other);
+
+        Graph operator+(const Graph& other) const; //
+
+        void operator+=(const Graph& other); //
+
+        Graph operator-(const Graph& other) const; //
+
+        void operator-=(const Graph& other); //
+
+        bool operator==(const Graph& other) const;
+
+        bool operator!=(const Graph& other) const;
+
+        bool operator>(const Graph& other) const;
+
+        bool operator>=(const Graph& other) const;
+
+        bool operator<(const Graph& other) const;
+
+        bool operator<=(const Graph& other) const;
+
+        // Pre-increment
+        Graph& operator++(); //
+        
+        // Post-increment
+        Graph operator++(int); //
+
+        // Pre-reduction
+        Graph& operator--(); //
+        
+        // Post-reduction
+        Graph operator--(int); //
+
+        Graph operator+();
+
+        Graph operator-();
+
+        Graph operator*(int); //Exeption for multiple in 0
+
+        void operator*=(int); //
+
+        Graph operator*(const Graph& other) const;
+
+
+
+        // Graph Algorithms Functions:
 
         bool is_BFS_cover_all(size_t start);
 
