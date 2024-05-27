@@ -38,10 +38,7 @@ namespace ariel {
         vector<vector<int>> combination = this->graph;
         for (size_t i = 0; i < this->n; i++) {
             for (size_t j = 0; j < this->n; j++) {
-                if (other.graph[i][j]) {
-                    combination[i][j] += other.graph[i][j];
-                    
-                }
+                combination[i][j] += other.graph[i][j];
             }
         }
         Graph result;
@@ -51,15 +48,8 @@ namespace ariel {
     }
 
     void Graph::operator+=(const Graph& other) {
-        try
-        {
-            (*this) = (*this) + other;
-        }
-        catch (const std::invalid_argument &e)
-        {
-            cout << e.what() << endl;
-        }
-        
+
+        (*this) = (*this) + other;
     }
 
     Graph Graph::operator-(const Graph& other) const {
@@ -70,9 +60,7 @@ namespace ariel {
         vector<vector<int>> subtraction = this->graph;
         for (size_t i = 0; i < this->n; i++) {
             for (size_t j = 0; j < this->n; j++) {
-                if (other.graph[i][j]) {
-                    subtraction[i][j] = 0;
-                }
+                subtraction[i][j] -= other.graph[i][j];
             }
         }
         Graph result;
@@ -83,14 +71,7 @@ namespace ariel {
 
     void Graph::operator-=(const Graph& other) {
         
-        try
-        {
-            (*this) = (*this) - other;
-        }
-        catch (const std::invalid_argument &e)
-        {
-            cout << e.what() << endl;
-        }
+        (*this) = (*this) - other;
     }
 
     bool Graph::operator==(const Graph& other) const {
@@ -210,14 +191,8 @@ namespace ariel {
     }
 
     void Graph::operator*=(int scalar) {
-        try
-        {
-            (*this) = (*this) * scalar;
-        }
-        catch (const std::invalid_argument &e)
-        {
-            cout << e.what() << endl;
-        }
+        
+        (*this) = (*this) * scalar;
     }
 
     Graph Graph::operator*(const Graph& other) const {
@@ -251,6 +226,8 @@ namespace ariel {
         return *this;
     }
 
+
+    // Graphs Algorithms
 
     bool Graph::is_BFS_cover_all(size_t start) {
 

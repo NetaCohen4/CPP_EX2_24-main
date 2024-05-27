@@ -26,7 +26,7 @@ namespace ariel {
 
     public:
         // Constructor
-        Graph(){}
+        Graph(){n = 0;}
 
         Graph(vector<vector<int>> g){this->loadGraph(g);}
 
