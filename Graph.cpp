@@ -10,6 +10,7 @@
 #include <queue>
 #include <vector>
 #include <stdexcept>
+#include <iomanip>
 
 namespace ariel {
 
@@ -17,10 +18,9 @@ namespace ariel {
         os << "Printing Graph . . .\n";
         for (size_t i = 0; i < graph.n; i++) {
             for (size_t j = 0; j < graph.n; j++) {
-                if (graph.graph[i][j]) {
-                    os << i << "-->" << j << endl;
-                }
+                os << std::setw(2) << graph.graph[i][j] << " ";
             }
+            os << endl;
         }
         return os;
     }
@@ -132,14 +132,12 @@ namespace ariel {
     // Pre-increment
     Graph& Graph::operator++() {
         for (size_t i = 0; i < this->n; i++) {
-            for (size_t j =0; j < this->n; j++) {
-                if (this->graph[i][j]) {
-                    if (this->graph[i][j] == -1) {
-                        throw std::invalid_argument("can't add 1 to edge weighted -1");
-                    }
-                    else {
-                        this->graph[i][j]++;
-                    }
+            for (size_t j = 0; j < this->n; j++) {
+                if (this->graph[i][j] == -1) {
+                    throw std::invalid_argument("can't add 1 to edge weighted -1");
+                }
+                else if (this->graph[i][j]) {
+                    (this->graph[i][j])++;
                 }
             }
         }
@@ -157,13 +155,11 @@ namespace ariel {
     Graph& Graph::operator--() { 
         for (size_t i = 0; i < this->n; i++) {
             for (size_t j =0; j < this->n; j++) {
-                if (this->graph[i][j]) {
-                    if (this->graph[i][j] == 1) {
-                        throw std::invalid_argument("can't subtract 1 to edge weighted 1");
-                    }
-                    else {
-                        this->graph[i][j]--;
-                    }
+                if (this->graph[i][j] == 1) {
+                    throw std::invalid_argument("can't subtract 1 to edge weighted 1");
+                }
+                else if (this->graph[i][j]) {
+                    (this->graph[i][j])--;
                 }
             }
         }
@@ -217,13 +213,10 @@ namespace ariel {
         return *this;
     }
 
-    Graph Graph::operator-() {
-        for (size_t i = 0; i < this->n; i++) {
-            for (size_t j = 0; j < this->n; j++) {
-                this->graph[i][j] *= -1;
-            }
-        }
-        return *this;
+    Graph Graph::operator-() const{
+        Graph g = *this;
+        g *= (-1);
+        return g;
     }
 
 

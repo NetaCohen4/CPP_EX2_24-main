@@ -332,27 +332,125 @@ TEST_CASE("Test >=")
 
 TEST_CASE("Test <")
 {
-    
+    ariel::Graph g1;
+    vector<vector<int>> graph1 = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}};
+    g1.loadGraph(graph1);
+    ariel::Graph g2;
+    vector<vector<int>> graph2 = {
+        {1, 1, 1},
+        {1, 1, 1},
+        {0, 0, 0}};
+    g2.loadGraph(graph2);
+
+    CHECK((g2 < g1) == false);
+
+    vector<vector<int>> graph3 = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 0, 0}};
+    g2.loadGraph(graph3);
+
+    CHECK((g2 < g1) == true);
+
+    CHECK((g2 < g2) == false);
 }
 
 TEST_CASE("Test <=")
 {
-    
+    ariel::Graph g1;
+    vector<vector<int>> graph1 = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}};
+    g1.loadGraph(graph1);
+    ariel::Graph g2;
+    vector<vector<int>> graph2 = {
+        {1, 1, 1},
+        {1, 1, 1},
+        {0, 0, 0}};
+    g2.loadGraph(graph2);
+
+    CHECK((g2 <= g1) == false);
+
+    vector<vector<int>> graph3 = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 0, 0}};
+    g2.loadGraph(graph3);
+
+    CHECK((g2 <= g1) == true);
+
+    CHECK((g2 <= g2) == true);
 }
 
 TEST_CASE("Test ++")
 {
-    
+    vector<vector<int>> graph1= {
+        {1, 1, 1},
+        {1, 1, 1},
+        {0, 0, 0}};
+    ariel::Graph g1;
+    g1.loadGraph(graph1);
+    vector<vector<int>> graph2= {
+        {2, 2, 2},
+        {2, 2, 2},
+        {0, 0, 0}};
+    ariel::Graph g2;
+    g2.loadGraph(graph2);
+    vector<vector<int>> graph3= {
+        {3, 3, 3},
+        {3, 3, 3},
+        {0, 0, 0}};
+    ariel::Graph g3;
+    g3.loadGraph(graph3);
+    CHECK((g2 == g1++) == false);
+    CHECK((g1 == g2) == true);
+    CHECK((g3 == (++g1)) == true);
 }
 
 TEST_CASE("Test --")
 {
-    
+    vector<vector<int>> graph1= {
+        {1, 1, 1},
+        {1, 1, 1},
+        {0, 0, 0}};
+    ariel::Graph g1;
+    g1.loadGraph(graph1);
+    vector<vector<int>> graph2= {
+        {2, 2, 2},
+        {2, 2, 2},
+        {0, 0, 0}};
+    ariel::Graph g2;
+    g2.loadGraph(graph2);
+    vector<vector<int>> graph3= {
+        {3, 3, 3},
+        {3, 3, 3},
+        {0, 0, 0}};
+    ariel::Graph g3;
+    g3.loadGraph(graph3);
+    CHECK((g3-- == g2 ) == false);
+    CHECK((g3 == g2 ) == true);
+    CHECK((g1 == (--g3)) == true);
 }
 
 TEST_CASE("Test - (unar)")
 {
-    
+    vector<vector<int>> graph1= {
+        {1, 1, 1},
+        {1, 1, 1},
+        {0, 0, 0}};
+    ariel::Graph g1;
+    g1.loadGraph(graph1);
+    vector<vector<int>> graph2= {
+        {-1, -1, -1},
+        {-1, -1, -1},
+        {0, 0, 0}};
+    ariel::Graph g2;
+    g2.loadGraph(graph2);
+    CHECK((-g1 == g2) == true);
 }
 
 TEST_CASE("Test * (by scalar)")
@@ -395,9 +493,4 @@ TEST_CASE("Test *= (by scalar)")
     CHECK((g1 == g2) == true);
 
     CHECK_THROWS(g1 *= 0);
-}
-
-TEST_CASE("Test * (Graph * Graph)")
-{
-    
 }

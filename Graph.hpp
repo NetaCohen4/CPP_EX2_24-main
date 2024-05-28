@@ -28,8 +28,6 @@ namespace ariel {
         // Constructor
         Graph(){n = 0;}
 
-        Graph(vector<vector<int>> g){this->loadGraph(g);}
-
         // Destructor
         ~Graph(){}
 
@@ -125,9 +123,9 @@ namespace ariel {
 
         Graph operator+();
 
-        Graph operator-();
+        Graph operator-() const;
 
-        Graph operator*(int); //Exeption for multiple in 0
+        Graph operator*(int) ; //Exeption for multiple in 0
 
         void operator*=(int); //
 

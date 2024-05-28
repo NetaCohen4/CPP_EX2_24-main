@@ -18,7 +18,8 @@ test: TestCounter.o Test.o $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o test
 
 tidy:
-	clang-tidy $(SOURCES) -checks=bugprone-*,clang-analyzer-*,cppcoreguidelines-*,performance-*,portability-*,readability-*,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-owning-memory --warnings-as-errors=-* --
+	clang-tidy $(SOURCES) TestCounter.cpp Test.cpp -checks=bugprone-*,clang-analyzer-*,cppcoreguidelines-*,performance-*,portability-*,readability-*,-cppcoreguidelines-pro-bounds-pointer-arithmetic,-cppcoreguidelines-owning-memory ,-readability-identifier-length --warnings-as-errors=-* --header-filter='.*' -quiet
+	
 
 valgrind: demo test
 	valgrind --tool=memcheck $(VALGRIND_FLAGS) ./demo 2>&1 | { egrep "lost| at " || true; }
