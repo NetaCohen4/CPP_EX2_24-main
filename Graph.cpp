@@ -74,6 +74,87 @@ namespace ariel {
         (*this) = (*this) - other;
     }
 
+    Graph Graph::operator*(const Graph& other) const {
+        if (this->n != other.n) {
+            throw std::invalid_argument("Attempt of multiple two different sized graphs");
+        }
+        Graph result;
+        vector<vector<int>> multiple(this->n, vector<int>(this->n, 0));
+        // Perform matrix multiplication
+        for (size_t i = 0; i < this->n; ++i) {
+            for (size_t j = 0; j < this->n; ++j) {
+                for (size_t k = 0; k < this->n; ++k) {
+                    multiple[i][j] += this->graph[i][k] * other.graph[k][j];
+                }
+            }
+        }
+        result.loadGraph(multiple);
+        return result;
+    }
+
+    Graph Graph::operator*(int scalar) {
+        Graph g = *this;
+        for (size_t i = 0; i < this->n; i++) {
+            for (size_t j =0; j < this->n; j++) {
+                g.graph[i][j] *= scalar;
+            }
+        }
+        return g;
+    }
+
+    void Graph::operator*=(int scalar) {
+        
+        (*this) = (*this) * scalar;
+    }
+
+    Graph Graph::operator+() {
+        return *this;
+    }
+
+    Graph Graph::operator-() const{
+        Graph g = *this;
+        g *= (-1);
+        return g;
+    }
+
+    // Pre-increment
+    Graph& Graph::operator++() {
+        for (size_t i = 0; i < this->n; i++) {
+            for (size_t j = 0; j < this->n; j++) {
+                if (this->graph[i][j]) {
+                    (this->graph[i][j])++;
+                }
+            }
+        }
+        return *this;
+    }
+
+    // Post-increment
+    Graph Graph::operator++(int) { 
+        Graph temp = *this;
+        ++(*this);
+        return temp;
+    }
+
+    // Pre-subtraction
+    Graph& Graph::operator--() { 
+        for (size_t i = 0; i < this->n; i++) {
+            for (size_t j =0; j < this->n; j++) {
+                if (this->graph[i][j]) {
+                    (this->graph[i][j])--;
+                }
+            }
+        }
+        return *this;
+    }
+
+    // Post-subtraction
+    Graph Graph::operator--(int) {
+        Graph temp = *this;
+        --(*this);
+        return temp;
+    }
+
     bool Graph::operator==(const Graph& other) const {
         if (this->graph == other.graph)
             return true;
@@ -129,95 +210,7 @@ namespace ariel {
         return !(*this > other);
     }
 
-    // Pre-increment
-    Graph& Graph::operator++() {
-        for (size_t i = 0; i < this->n; i++) {
-            for (size_t j = 0; j < this->n; j++) {
-                if (this->graph[i][j] == -1) {
-                    throw std::invalid_argument("can't add 1 to edge weighted -1");
-                }
-                else if (this->graph[i][j]) {
-                    (this->graph[i][j])++;
-                }
-            }
-        }
-        return *this;
-    }
-
-    // Post-increment
-    Graph Graph::operator++(int) { 
-        Graph temp = *this;
-        ++(*this);
-        return temp;
-    }
-
-    // Pre-subtraction
-    Graph& Graph::operator--() { 
-        for (size_t i = 0; i < this->n; i++) {
-            for (size_t j =0; j < this->n; j++) {
-                if (this->graph[i][j] == 1) {
-                    throw std::invalid_argument("can't subtract 1 to edge weighted 1");
-                }
-                else if (this->graph[i][j]) {
-                    (this->graph[i][j])--;
-                }
-            }
-        }
-        return *this;
-    }
-
-    // Post-subtraction
-    Graph Graph::operator--(int) {
-        Graph temp = *this;
-        --(*this);
-        return temp;
-    }
-
-    Graph Graph::operator*(int scalar) {
-        Graph g = *this;
-        if (!scalar) {
-            throw std::invalid_argument("can't multiple by 0");
-        }
-        for (size_t i = 0; i < this->n; i++) {
-            for (size_t j =0; j < this->n; j++) {
-                g.graph[i][j] *= scalar;
-            }
-        }
-        return g;
-    }
-
-    void Graph::operator*=(int scalar) {
-        
-        (*this) = (*this) * scalar;
-    }
-
-    Graph Graph::operator*(const Graph& other) const {
-        if (this->n != other.n) {
-            throw std::invalid_argument("Attempt of multiple two different sized graphs");
-        }
-        Graph result;
-        vector<vector<int>> multiple(this->n, vector<int>(this->n, 0));
-        // Perform matrix multiplication
-        for (size_t i = 0; i < this->n; ++i) {
-            for (size_t j = 0; j < this->n; ++j) {
-                for (size_t k = 0; k < this->n; ++k) {
-                    multiple[i][j] += this->graph[i][k] * other.graph[k][j];
-                }
-            }
-        }
-        result.loadGraph(multiple);
-        return result;
-    }
-
-    Graph Graph::operator+() {
-        return *this;
-    }
-
-    Graph Graph::operator-() const{
-        Graph g = *this;
-        g *= (-1);
-        return g;
-    }
+    
 
 
     // Graphs Algorithms

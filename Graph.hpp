@@ -89,13 +89,31 @@ namespace ariel {
 
         void operator=(const Graph& other);
 
-        Graph operator+(const Graph& other) const; //
+        Graph operator+(const Graph& other) const; // Throws exception for different sized graphs
 
-        void operator+=(const Graph& other); //
+        void operator+=(const Graph& other); // Throws exception for different sized graphs
 
-        Graph operator-(const Graph& other) const; //
+        Graph operator-(const Graph& other) const; // Throws exception for different sized graphs
 
-        void operator-=(const Graph& other); //
+        void operator-=(const Graph& other); // Throws exception for different sized graphs
+
+        Graph operator*(const Graph& other) const; // Throws exception for different sized graphs
+
+        Graph operator*(int);
+
+        void operator*=(int);
+
+        Graph operator+();
+
+        Graph operator-() const;
+
+        Graph& operator++(); // Pre-increment
+        
+        Graph operator++(int); // Post-increment
+
+        Graph& operator--(); // Pre-reduction
+        
+        Graph operator--(int); // Post-reduction
 
         bool operator==(const Graph& other) const;
 
@@ -108,28 +126,6 @@ namespace ariel {
         bool operator<(const Graph& other) const;
 
         bool operator<=(const Graph& other) const;
-
-        // Pre-increment
-        Graph& operator++(); //
-        
-        // Post-increment
-        Graph operator++(int); //
-
-        // Pre-reduction
-        Graph& operator--(); //
-        
-        // Post-reduction
-        Graph operator--(int); //
-
-        Graph operator+();
-
-        Graph operator-() const;
-
-        Graph operator*(int) ; //Exeption for multiple in 0
-
-        void operator*=(int); //
-
-        Graph operator*(const Graph& other) const;
 
 
 
