@@ -158,6 +158,8 @@ namespace ariel {
     bool Graph::operator==(const Graph& other) const {
         if (this->graph == other.graph)
             return true;
+        if (!(this->graph > other.graph) && !(this->graph < other.graph))
+            return true;
         return false;
     }
 
@@ -167,7 +169,7 @@ namespace ariel {
 
     bool Graph::operator>(const Graph& other) const {
 
-        if (*this == other) {
+        if (this->graph == other.graph) {
             return false;
         }
         //בדיקת הכלה

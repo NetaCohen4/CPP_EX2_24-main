@@ -23,10 +23,7 @@ int main()
     g1.loadGraph(graph); // Load the graph to the object.
 
     cout<<g1; // Should print the matrix of the graph: [0, 1, 0], [1, 0, 1], [0, 1, 0]
-    g1++;
-    cout << ++g1;
-    cout << g1++;
-    cout << g1;
+
     // 3x3 matrix that represents a weighted connected graph.
     vector<vector<int>> weightedGraph = {
         {0, 1, 1},
@@ -34,8 +31,6 @@ int main()
         {1, 2, 0}};
     ariel::Graph g2;
     g2.loadGraph(weightedGraph); // Load the graph to the object.
-    cout << g2*5;
-
 
     ariel::Graph g3 = g1 + g2; // Add the two graphs together.
     cout<<g3;           // Should print the matrix of the graph: [0, 2, 1], [2, 0, 3], [1, 3, 0]
@@ -64,5 +59,4 @@ int main()
     {
         cout << e.what() << endl; // Should print "The number of columns in the first matrix must be equal to the number of rows in the second matrix."
     }
-    
 }
